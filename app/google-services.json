@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "265216199825",
+    "firebase_url": "https://fiddle-2d706.firebaseio.com",
+    "project_id": "fiddle-2d706",
+    "storage_bucket": "fiddle-2d706.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:265216199825:android:bfbcd0d83ca9544b",
+        "android_client_info": {
+          "package_name": "in.browser.fiddle"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "265216199825-lue6s6mjib7p9sjojpp6n31a4heomt3p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "in.browser.fiddle",
+            "certificate_hash": "3f465f6077d3f80eb38d5dad0ec14b08480b972b"
+          }
+        },
+        {
+          "client_id": "265216199825-gtpr2hgnt9om48d49ej55jopt0771mai.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBS5pN3RDTEPpsumpjwTcQFxHxdCYKXVqY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "265216199825-gtpr2hgnt9om48d49ej55jopt0771mai.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
