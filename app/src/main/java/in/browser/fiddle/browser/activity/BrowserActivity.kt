@@ -4,7 +4,9 @@
 
 package `in`.browser.fiddle.browser.activity
 
+import `in`.browser.fiddle.DashboardActivity
 import `in`.browser.fiddle.IncognitoActivity
+import `in`.browser.fiddle.LoginActivity
 import `in`.browser.fiddle.R
 import `in`.browser.fiddle.browser.*
 import `in`.browser.fiddle.browser.fragment.BookmarksFragment
@@ -84,6 +86,12 @@ import androidx.fragment.app.Fragment
 import androidx.palette.graphics.Palette
 import butterknife.ButterKnife
 import com.anthonycr.grant.PermissionsManager
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 import io.reactivex.Completable
 import io.reactivex.Scheduler
 import io.reactivex.disposables.Disposable
@@ -94,9 +102,17 @@ import kotlinx.android.synthetic.main.browser_content.*
 import kotlinx.android.synthetic.main.search_interface.*
 import kotlinx.android.synthetic.main.toolbar.*
 import java.io.IOException
+import java.util.*
 import javax.inject.Inject
 
 abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIController, OnClickListener {
+
+    //Firebase
+    private var mAuth: FirebaseAuth? = null
+    private var mAuthListener: FirebaseAuth.AuthStateListener? = null
+
+    lateinit var mAdView : AdView
+//    private var fab: FloatingActionButton? = null
 
     // Toolbar Views
     private var searchBackground: View? = null
@@ -209,6 +225,27 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
         injector.inject(this)
         setContentView(R.layout.activity_main)
         ButterKnife.bind(this)
+
+        mAuth = FirebaseAuth.getInstance()//onStart method at 1247
+        mAuthListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
+            if (firebaseAuth.currentUser == null) {
+//                startActivity(Intent(this@BrowserActivity, LoginActivity::class.java))
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivity(intent)
+//                Toast.makeText(this@BrowserActivity, "LoginAct called from browseract:217", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        MobileAds.initialize(this,
+                "ca-app-pub-3940256099942544~3347511713")
+        mAdView = findViewById(R.id.adView)
+        val adRequest = AdRequest.Builder().build()
+        mAdView.loadAd(adRequest)
+
+//        val fab = findViewById<FloatingActionButton>(R.id.fab)
+//        fab!!.setOnClickListener {
+//            Toast.makeText(this, "Rewarded video triggered", Toast.LENGTH_LONG).show()
+//        }
 
         val incognitoNotification = IncognitoNotification(this, notificationManager)
         tabsManager.addTabNumberChangedListener {
@@ -742,6 +779,10 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
                 }
                 return true
             }
+            R.id.action_dashboard -> {
+                startActivity(Intent(this, DashboardActivity::class.java))
+                return true
+            }
             R.id.action_back -> {
                 if (currentView?.canGoBack() == true) {
                     currentView.goBack()
@@ -1232,6 +1273,7 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
 
     override fun onStart() {
         super.onStart()
+        mAuth!!.addAuthStateListener(mAuthListener!!)
         proxyUtils.onStart(this)
     }
 
@@ -1373,8 +1415,69 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
     }
 
     override fun updateProgress(progress: Int) {
+        val p = progress
+//          Toast.makeText(this,"Progress bar at: " + p, Toast.LENGTH_SHORT).show()
+        if(p == 32) {
+            Toast.makeText(this,"first " + p, Toast.LENGTH_SHORT).show()
+            saveData()
+        }else if(p == 33){
+            Toast.makeText(this,"second " + p, Toast.LENGTH_SHORT).show()
+            saveData()
+        }else if(p == 34){
+            Toast.makeText(this,"third " + p, Toast.LENGTH_SHORT).show()
+            saveData()
+        }else if(p == 35){
+            Toast.makeText(this,"forth " + p, Toast.LENGTH_SHORT).show()
+            saveData()
+        }else if(p == 36){
+            Toast.makeText(this,"fifth " + p, Toast.LENGTH_SHORT).show()
+            saveData()
+        }else if(p == 43){
+            Toast.makeText(this,"sixth " + p, Toast.LENGTH_SHORT).show()
+            saveData()
+        }else if(p == 44){
+            Toast.makeText(this,"seventh " + p, Toast.LENGTH_SHORT).show()
+            saveData()
+        }else if(p == 45){
+            Toast.makeText(this,"eighth " + p, Toast.LENGTH_SHORT).show()
+            saveData()
+        }else if(p == 46){
+            Toast.makeText(this,"ninth " + p, Toast.LENGTH_SHORT).show()
+            saveData()
+        }
         setIsLoading(progress < 100)
         progress_view.progress = progress
+    }
+
+    private fun saveData() {
+        var multiplier = 2
+        var initialElixir = Random().nextInt((5-1) + 1)
+        var elixir: Int = initialElixir * multiplier
+        var count = 1
+
+        val currentUser = mAuth?.currentUser
+        if(currentUser!=null) {
+            val uid: String = currentUser!!.uid
+            var databaseReference = FirebaseDatabase.getInstance().getReference("users").child(uid).child("elixir")
+
+
+            databaseReference!!.runTransaction(object: Transaction.Handler {
+                override fun doTransaction(mutableData: MutableData): Transaction.Result {
+                    val count = mutableData.getValue(Int::class.java)
+                    if (count == null) {
+                        mutableData.setValue(1)
+                    } else {
+                        mutableData.setValue(count + elixir)
+                    }
+                    return Transaction.success(mutableData)
+                }
+
+                override fun onComplete(p0: DatabaseError?, p1: Boolean, p2: DataSnapshot?) {}
+
+                //override fun onComplete(databaseError: DatabaseError?, b: Boolean, dataSnapshot: DataSnapshot) {}
+            })
+        }
+//        databaseReference.setValue(count)
     }
 
     protected fun addItemToHistory(title: String?, url: String) {
