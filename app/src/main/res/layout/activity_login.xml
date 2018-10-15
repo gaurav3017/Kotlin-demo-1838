@@ -16,9 +16,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:textColor="@color/white"
+            android:fontFamily="@font/varela_round"
             android:text="@string/app_name"
-            android:textSize="36sp"/>
+            android:textColor="@color/white"
+            android:textSize="36sp" />
 
     </RelativeLayout>
 
@@ -38,6 +39,7 @@
         android:layout_below="@+id/googleBtn"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="-40dp"
+        android:fontFamily="@font/varela_round"
         android:text="@string/terms_and_conditions_label" />
 
 </RelativeLayout>

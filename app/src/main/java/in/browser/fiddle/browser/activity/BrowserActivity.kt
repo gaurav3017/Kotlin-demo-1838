@@ -102,6 +102,7 @@ import kotlinx.android.synthetic.main.browser_content.*
 import kotlinx.android.synthetic.main.search_interface.*
 import kotlinx.android.synthetic.main.toolbar.*
 import java.io.IOException
+import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
@@ -235,6 +236,7 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
 //                Toast.makeText(this@BrowserActivity, "LoginAct called from browseract:217", Toast.LENGTH_SHORT).show()
             }
         }
+
 
         MobileAds.initialize(this,
                 "ca-app-pub-3940256099942544~3347511713")
@@ -1418,31 +1420,31 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
         val p = progress
 //          Toast.makeText(this,"Progress bar at: " + p, Toast.LENGTH_SHORT).show()
         if(p == 32) {
-            Toast.makeText(this,"first " + p, Toast.LENGTH_SHORT).show()
+//            Toast.makeText(this,"first " + p, Toast.LENGTH_SHORT).show()
             saveData()
         }else if(p == 33){
-            Toast.makeText(this,"second " + p, Toast.LENGTH_SHORT).show()
+//            Toast.makeText(this,"second " + p, Toast.LENGTH_SHORT).show()
             saveData()
         }else if(p == 34){
-            Toast.makeText(this,"third " + p, Toast.LENGTH_SHORT).show()
+//            Toast.makeText(this,"third " + p, Toast.LENGTH_SHORT).show()
             saveData()
         }else if(p == 35){
-            Toast.makeText(this,"forth " + p, Toast.LENGTH_SHORT).show()
+//            Toast.makeText(this,"forth " + p, Toast.LENGTH_SHORT).show()
             saveData()
         }else if(p == 36){
-            Toast.makeText(this,"fifth " + p, Toast.LENGTH_SHORT).show()
+//            Toast.makeText(this,"fifth " + p, Toast.LENGTH_SHORT).show()
             saveData()
         }else if(p == 43){
-            Toast.makeText(this,"sixth " + p, Toast.LENGTH_SHORT).show()
+//            Toast.makeText(this,"sixth " + p, Toast.LENGTH_SHORT).show()
             saveData()
         }else if(p == 44){
-            Toast.makeText(this,"seventh " + p, Toast.LENGTH_SHORT).show()
+//            Toast.makeText(this,"seventh " + p, Toast.LENGTH_SHORT).show()
             saveData()
         }else if(p == 45){
-            Toast.makeText(this,"eighth " + p, Toast.LENGTH_SHORT).show()
+//            Toast.makeText(this,"eighth " + p, Toast.LENGTH_SHORT).show()
             saveData()
         }else if(p == 46){
-            Toast.makeText(this,"ninth " + p, Toast.LENGTH_SHORT).show()
+//            Toast.makeText(this,"ninth " + p, Toast.LENGTH_SHORT).show()
             saveData()
         }
         setIsLoading(progress < 100)
@@ -1451,23 +1453,36 @@ abstract class BrowserActivity : ThemableBrowserActivity(), BrowserView, UIContr
 
     private fun saveData() {
         var multiplier = 2
-        var initialElixir = Random().nextInt((5-1) + 1)
+        var initialElixir = Random().nextInt((3-1) + 1)
         var elixir: Int = initialElixir * multiplier
         var count = 1
+
+//        //Current Date
+////        val dateFormatter = SimpleDateFormat("yyyyMMdd hhmmss")
+//        val dateFormatter = SimpleDateFormat("ddMMyyyy")
+//        dateFormatter.isLenient = false
+//        val today = Date()
+//        val currentDate = dateFormatter.format(today)
+//        Toast.makeText(this, "Date: $currentDate", Toast.LENGTH_SHORT).show()
+
 
         val currentUser = mAuth?.currentUser
         if(currentUser!=null) {
             val uid: String = currentUser!!.uid
             var databaseReference = FirebaseDatabase.getInstance().getReference("users").child(uid).child("elixir")
-
-
+            var uidReference = FirebaseDatabase.getInstance().getReference("users").child(uid).child("userEmail")
+            uidReference.setValue(currentUser.getEmail())
             databaseReference!!.runTransaction(object: Transaction.Handler {
                 override fun doTransaction(mutableData: MutableData): Transaction.Result {
                     val count = mutableData.getValue(Int::class.java)
                     if (count == null) {
                         mutableData.setValue(1)
                     } else {
-                        mutableData.setValue(count + elixir)
+                        if(count > 230) {
+                            mutableData.setValue(count)
+                        }else{
+                            mutableData.setValue(count + elixir)
+                        }
                     }
                     return Transaction.success(mutableData)
                 }

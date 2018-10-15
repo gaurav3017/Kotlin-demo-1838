@@ -28,6 +28,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class LoginActivity extends AppCompatActivity {
 
     private SignInButton mGoogleBtn;
@@ -45,6 +49,12 @@ public class LoginActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_login);
+
+//        DateFormat dateFormatter = new SimpleDateFormat("yyyyMMdd hhmmss");
+//        dateFormatter.setLenient(false);
+//        Date today = new Date();
+//        String s = dateFormatter.format(today);
+//        Toast.makeText(this, "Date: " + s, Toast.LENGTH_SHORT).show();
 
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
